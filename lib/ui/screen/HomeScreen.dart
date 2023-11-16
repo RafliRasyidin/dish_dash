@@ -83,66 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 16),
                       _buildListTitleSection(context, "All Restaurants"),
                       const SizedBox(height: 16),
-                      ListView.builder(
-                        itemCount: restaurants.length,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          final item = restaurants[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      item.pictureId,
-                                      width: double.infinity,
-                                      height: 160,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          item.name,
-                                          style: Theme.of(context).textTheme.titleMedium,
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      ),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            size: 12,
-                                            color: Theme.of(context).colorScheme.onBackground,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            item.rating.toString(),
-                                            style: Theme.of(context).textTheme.bodyMedium,
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  Text(
-                                    item.description,
-                                    style: Theme.of(context).textTheme.bodySmall,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      )
+                      _buildListAllRestaurants(restaurants)
                     ],
                   ),
                 ),
@@ -150,6 +91,73 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
         )
+    );
+  }
+
+  ListView _buildListAllRestaurants(List<Restaurant> restaurants) {
+    return ListView.builder(
+      itemCount: restaurants.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final item = restaurants[index];
+        return _buildItemAllRestaurants(item, context);
+      },
+    );
+  }
+
+  Padding _buildItemAllRestaurants(Restaurant item, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(
+              item.pictureId,
+              width: double.infinity,
+              height: 160,
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Text(
+                  item.name,
+                  style: Theme.of(context).textTheme.titleMedium,
+                  overflow: TextOverflow.ellipsis,
+                )
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.star,
+                    size: 12,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    item.rating.toString(),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              )
+            ],
+          ),
+          Text(
+            item.description,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.outline
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+          ),
+        ],
+      ),
     );
   }
 
@@ -202,7 +210,9 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 180,
             child: Text(
               item.city,
-              style: Theme.of(context).textTheme.bodySmall,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.outline
+              ),
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
             ),
