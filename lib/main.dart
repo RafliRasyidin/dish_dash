@@ -1,4 +1,7 @@
+import 'package:dish_dash/data/Restaurant.dart';
+import 'package:dish_dash/ui/screen/DetailRestaurantScreen.dart';
 import 'package:dish_dash/ui/screen/HomeScreen.dart';
+import 'package:dish_dash/ui/screen/SearchRestaurantScreen.dart';
 import 'package:dish_dash/ui/styles/Colors.dart';
 import 'package:dish_dash/ui/styles/Typography.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +49,14 @@ class MyApp extends StatelessWidget {
               )
           )
       ),
-      home: const HomeScreen(),
+      initialRoute: HomeScreen.routeName,
+      routes: {
+        HomeScreen.routeName: (context) => const HomeScreen(),
+        DetailRestaurantScreen.routeName: (context) => DetailRestaurantScreen(
+          restaurant: ModalRoute.of(context)?.settings.arguments as Restaurant
+        ),
+        SearchRestaurantScreen.routeName: (context) => const SearchRestaurantScreen()
+      },
     );
   }
 }

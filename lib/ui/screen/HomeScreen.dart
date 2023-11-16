@@ -1,10 +1,14 @@
 import 'package:dish_dash/data/Restaurant.dart';
 import 'package:dish_dash/generated/assets.dart';
 import 'package:dish_dash/ui/component/SearchBox.dart';
+import 'package:dish_dash/ui/screen/DetailRestaurantScreen.dart';
+import 'package:dish_dash/ui/screen/SearchRestaurantScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const routeName = "home";
+
   const HomeScreen({super.key});
 
   @override
@@ -46,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           enabled: false,
                         ),
                         onTap: () {
+                          Navigator.pushNamed(context, SearchRestaurantScreen.routeName);
                         },
                       ),
                       const SizedBox(height: 16),
@@ -94,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  ListView _buildListAllRestaurants(List<Restaurant> restaurants) {
+  Widget _buildListAllRestaurants(List<Restaurant> restaurants) {
     return ListView.builder(
       itemCount: restaurants.length,
       shrinkWrap: true,
@@ -106,80 +111,34 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Padding _buildItemAllRestaurants(Restaurant item, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              item.pictureId,
-              width: double.infinity,
-              height: 160,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Text(
-                  item.name,
-                  style: Theme.of(context).textTheme.titleMedium,
-                  overflow: TextOverflow.ellipsis,
-                )
+  Widget _buildItemAllRestaurants(Restaurant item, BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(
+            context,
+            DetailRestaurantScreen.routeName,
+            arguments: item
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Hero(
+                tag: item.pictureId,
+                child: Image.network(
+                  item.pictureId,
+                  width: double.infinity,
+                  height: 160,
+                  fit: BoxFit.cover,
+                ),
               ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.star,
-                    size: 12,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    item.rating.toString(),
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              )
-            ],
-          ),
-          Text(
-            item.description,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.outline
             ),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Padding _buildItemRestaurant(Restaurant item, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              item.pictureId,
-              width: 180,
-              height: 100,
-              fit: BoxFit.fill,
-            ),
-          ),
-          const SizedBox(height: 8,),
-          SizedBox(
-            width: 180,
-            child: Row(
+            const SizedBox(height: 12),
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
@@ -187,14 +146,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     item.name,
                     style: Theme.of(context).textTheme.titleMedium,
                     overflow: TextOverflow.ellipsis,
-                  ),
+                  )
                 ),
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.star,
                       size: 12,
-                      color: Colors.amber,
+                      color: Theme.of(context).colorScheme.onBackground,
                     ),
                     const SizedBox(width: 4),
                     Text(
@@ -205,24 +164,91 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ],
             ),
-          ),
-          SizedBox(
-            width: 180,
-            child: Text(
-              item.city,
+            Text(
+              item.description,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.outline
               ),
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Text _buildListTitleSection(BuildContext context, String title) {
+  Widget _buildItemRestaurant(Restaurant item, BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          DetailRestaurantScreen.routeName,
+          arguments: item
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(right: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                item.pictureId,
+                width: 180,
+                height: 100,
+                fit: BoxFit.fill,
+              ),
+            ),
+            const SizedBox(height: 8,),
+            SizedBox(
+              width: 180,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Text(
+                      item.name,
+                      style: Theme.of(context).textTheme.titleMedium,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.star,
+                        size: 12,
+                        color: Colors.amber,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        item.rating.toString(),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              width: 180,
+              child: Text(
+                item.city,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.outline
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildListTitleSection(BuildContext context, String title) {
     return Text(
       title,
       style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -232,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Row _buildTextNearbyRestaurant(BuildContext context, List<Restaurant> restaurants) {
+  Widget _buildTextNearbyRestaurant(BuildContext context, List<Restaurant> restaurants) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
