@@ -24,14 +24,15 @@ const TextTheme typography = TextTheme(
     fontSize: 24
   ),
   headlineMedium: TextStyle(
-      fontFamily: _fontFamily,
-      fontWeight: FontWeight.w600,
-      fontSize: 22
+    fontFamily: _fontFamily,
+    fontWeight: FontWeight.w600,
+    fontSize: 22,
+    fontStyle: FontStyle.normal
   ),
   headlineSmall: TextStyle(
-      fontFamily: _fontFamily,
-      fontWeight: FontWeight.w600,
-      fontSize: 20
+    fontFamily: _fontFamily,
+    fontWeight: FontWeight.w600,
+    fontSize: 20
   ),
   titleLarge: TextStyle(
     fontFamily: _fontFamily,
