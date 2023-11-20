@@ -11,5 +11,7 @@ class Assets {
   static const String assetsImgFood4 = 'assets/img_food_4.jpg';
   static const String assetsImgFood5 = 'assets/img_food_5.jpg';
   static const String assetsLocalRestaurant = 'assets/local_restaurant.json';
+  static const String assetsLogoApp = 'assets/logo_app.png';
+  static const String assetsLogoSplash = 'assets/logo_splash.png';
 
 }
