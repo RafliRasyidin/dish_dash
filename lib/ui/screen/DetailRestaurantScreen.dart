@@ -256,18 +256,6 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                   Navigator.pop(context);
                 },
               ),
-              InkWell(
-                child: SvgPicture.asset(
-                  Assets.assetsIcSearch,
-                  colorFilter: ColorFilter.mode(
-                      Theme.of(context).colorScheme.background,
-                      BlendMode.srcIn
-                  ),
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, SearchRestaurantScreen.routeName);
-                },
-              )
             ],
           )
         )

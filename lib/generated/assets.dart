@@ -2,13 +2,14 @@
 class Assets {
   Assets._();
 
-  static const String assetsFood1 = 'assets/img_food_1.jpg';
-  static const String assetsFood2 = 'assets/img_food_2.jpg';
-  static const String assetsFood3 = 'assets/img_food_3.jpg';
-  static const String assetsFood4 = 'assets/img_food_4.jpg';
-  static const String assetsFood5 = 'assets/img_food_5.jpg';
+  static const String assetsEmptySearch = 'assets/empty_search.svg';
   static const String assetsIcPinLocation = 'assets/ic_pin_location.svg';
   static const String assetsIcSearch = 'assets/ic_search.svg';
+  static const String assetsImgFood1 = 'assets/img_food_1.jpg';
+  static const String assetsImgFood2 = 'assets/img_food_2.jpg';
+  static const String assetsImgFood3 = 'assets/img_food_3.jpg';
+  static const String assetsImgFood4 = 'assets/img_food_4.jpg';
+  static const String assetsImgFood5 = 'assets/img_food_5.jpg';
   static const String assetsLocalRestaurant = 'assets/local_restaurant.json';
 
 }

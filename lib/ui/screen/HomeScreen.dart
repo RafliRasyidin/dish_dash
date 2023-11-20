@@ -50,7 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           enabled: false,
                         ),
                         onTap: () {
-                          Navigator.pushNamed(context, SearchRestaurantScreen.routeName);
+                          Navigator.pushNamed(
+                            context,
+                            SearchRestaurantScreen.routeName,
+                            arguments: restaurants
+                          );
                         },
                       ),
                       const SizedBox(height: 16),

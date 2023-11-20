@@ -9,13 +9,15 @@ class SearchBox extends StatefulWidget {
   String? hint = "";
   ValueChanged<String> onTextChange;
   bool enabled = true;
+  bool autoFocus = false;
 
   SearchBox({
     super.key,
     required this.text,
     required this.hint,
     required this.onTextChange,
-    this.enabled = true
+    this.enabled = true,
+    this.autoFocus = false
   });
 
   @override
@@ -52,6 +54,7 @@ class _SearchBoxState extends State<SearchBox> {
       padding: const EdgeInsets.only(left: 16),
       child: TextField(
         controller: _controller,
+        autofocus: widget.autoFocus,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
             color: Theme.of(context).colorScheme.onSurfaceVariant
         ),

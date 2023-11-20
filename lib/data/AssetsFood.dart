@@ -6,11 +6,11 @@ class AssetsFood {
   AssetsFood._();
 
   static List<String> imagesFood = [
-    Assets.assetsFood1,
-    Assets.assetsFood2,
-    Assets.assetsFood3,
-    Assets.assetsFood4,
-    Assets.assetsFood5
+    Assets.assetsImgFood1,
+    Assets.assetsImgFood2,
+    Assets.assetsImgFood3,
+    Assets.assetsImgFood4,
+    Assets.assetsImgFood5
   ];
 
   static String getRandomAssetFood() {
