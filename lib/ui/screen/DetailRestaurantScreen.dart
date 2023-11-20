@@ -1,9 +1,6 @@
 import 'package:dish_dash/data/AssetsFood.dart';
 import 'package:dish_dash/data/Restaurant.dart';
-import 'package:dish_dash/generated/assets.dart';
-import 'package:dish_dash/ui/screen/SearchRestaurantScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 //ignore: must_be_immutable
