@@ -1,10 +1,14 @@
+import 'package:dish_dash/data/remote/api/ApiService.dart';
 import 'package:dish_dash/model/Restaurant.dart';
 import 'package:dish_dash/generated/assets.dart';
+import 'package:dish_dash/model/ResultState.dart';
 import 'package:dish_dash/ui/component/SearchBox.dart';
 import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
+import 'package:dish_dash/ui/screen/home/HomeViewModel.dart';
 import 'package:dish_dash/ui/screen/search/SearchRestaurantScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = "home";
@@ -17,89 +21,126 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String _searchedText = "";
+  late HomeViewModel _viewModel;
+
+  @override
+  void initState() {
+    _viewModel = HomeViewModel();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: FutureBuilder(
-          future: DefaultAssetBundle.of(context).loadString(Assets.assetsLocalRestaurant),
-          builder: (context, snapshot) {
-            final restaurants = parseRestaurants(snapshot.data);
-            final bestRestaurants = List.from(restaurants);
-            final recommendedRestaurants = restaurants.where((element) => element.rating > 4.0).toList();
-            bestRestaurants.sort((a, b) => b.rating.compareTo(a.rating));
-            return Scaffold(
-              backgroundColor: Theme.of(context).colorScheme.background,
-              body: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildTextNearbyRestaurant(context, restaurants),
-                      const SizedBox(height: 16),
-                      InkWell(
-                        child: SearchBox(
-                          text: _searchedText,
-                          hint: "Search restaurant here...",
-                          onTextChange: (newText) {
-                            setState(() {
-                              _searchedText = newText;
-                            });
-                          },
-                          enabled: false,
-                        ),
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            SearchRestaurantScreen.routeName,
-                            arguments: restaurants
-                          );
-                        },
+        child: Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          body: ChangeNotifierProvider(
+            create: (_) => _viewModel,
+            child: Consumer<HomeViewModel>(
+              builder: (context, vm, _) {
+                switch (vm.result.status) {
+                  case Status.loading:
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  case Status.success: return _buildContent(vm.result.data!);
+                  case Status.noConnection:
+                    return Center(
+                      child: Text(
+                        "No Internet Connection",
+                        style: Theme.of(context).textTheme.displayLarge,
                       ),
-                      const SizedBox(height: 16),
-                      _buildListTitleSection(context, "Best Restaurant"),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        height: 154,
-                        child: ListView.builder(
-                          itemCount: bestRestaurants.length,
-                          physics: const ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            final item = bestRestaurants[index];
-                            return _buildItemRestaurant(item, context);
-                          }
-                        ),
+                    );
+                  case Status.empty:
+                    return Center(
+                      child: Text(
+                        "Data Not Found",
+                        style: Theme.of(context).textTheme.displayLarge,
                       ),
-                      const SizedBox(height: 16),
-                      _buildListTitleSection(context, "Recommended For You!"),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        height: 154,
-                        child: ListView.builder(
-                            itemCount: recommendedRestaurants.length,
-                            physics: const ClampingScrollPhysics(),
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              final item = recommendedRestaurants[index];
-                              return _buildItemRestaurant(item, context);
-                            }
-                        ),
+                    );
+                  case Status.failure:
+                    return Center(
+                      child: Text(
+                        vm.result.message!,
+                        style: Theme.of(context).textTheme.displayLarge,
                       ),
-                      const SizedBox(height: 16),
-                      _buildListTitleSection(context, "All Restaurants"),
-                      const SizedBox(height: 16),
-                      _buildListAllRestaurants(restaurants)
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
+                    );
+                  default: return Container();
+                }
+              },
+            ),
+          ),
         )
+    );
+  }
+
+  Widget _buildContent(List<Restaurant> restaurants) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildTextNearbyRestaurant(context, restaurants),
+            const SizedBox(height: 16),
+            InkWell(
+              child: SearchBox(
+                text: _searchedText,
+                hint: "Search restaurant here...",
+                onTextChange: (newText) {
+                  setState(() {
+                    _searchedText = newText;
+                  });
+                },
+                enabled: false,
+              ),
+              onTap: () {
+                Navigator.pushNamed(
+                    context,
+                    SearchRestaurantScreen.routeName,
+                    arguments: restaurants
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            _buildListTitleSection(context, "Best Restaurant"),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 154,
+              child: ListView.builder(
+                  itemCount: restaurants.length,
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    final item = restaurants[index];
+                    return _buildItemRestaurant(item, context);
+                  }
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildListTitleSection(context, "Recommended For You!"),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 154,
+              child: ListView.builder(
+                  itemCount: restaurants.length,
+                  physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    final item = restaurants[index];
+                    return _buildItemRestaurant(item, context);
+                  }
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildListTitleSection(context, "All Restaurants"),
+            const SizedBox(height: 16),
+            _buildListAllRestaurants(restaurants)
+          ],
+        ),
+      ),
     );
   }
 
@@ -132,9 +173,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Hero(
-                tag: item.pictureId,
+                tag: "$urlImageMedium/${item.pictureId}",
                 child: Image.network(
-                  item.pictureId,
+                  "$urlImageMedium/${item.pictureId}",
                   width: double.infinity,
                   height: 160,
                   fit: BoxFit.cover,
@@ -199,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
-                item.pictureId,
+                "$urlImageSmall/${item.pictureId}",
                 width: 180,
                 height: 100,
                 fit: BoxFit.fill,
