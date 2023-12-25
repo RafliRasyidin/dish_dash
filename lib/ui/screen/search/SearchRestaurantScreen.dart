@@ -1,9 +1,9 @@
-import 'package:dish_dash/ui/screen/DetailRestaurantScreen.dart';
+import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../data/Restaurant.dart';
-import '../component/SearchBox.dart';
+import '../../../model/Restaurant.dart';
+import '../../component/SearchBox.dart';
 
 //ignore: must_be_immutable
 class SearchRestaurantScreen extends StatefulWidget {

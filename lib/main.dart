@@ -1,7 +1,7 @@
-import 'package:dish_dash/data/Restaurant.dart';
-import 'package:dish_dash/ui/screen/DetailRestaurantScreen.dart';
-import 'package:dish_dash/ui/screen/HomeScreen.dart';
-import 'package:dish_dash/ui/screen/SearchRestaurantScreen.dart';
+import 'package:dish_dash/model/Restaurant.dart';
+import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
+import 'package:dish_dash/ui/screen/home/HomeScreen.dart';
+import 'package:dish_dash/ui/screen/search/SearchRestaurantScreen.dart';
 import 'package:dish_dash/ui/styles/Colors.dart';
 import 'package:dish_dash/ui/styles/Typography.dart';
 import 'package:flutter/material.dart';

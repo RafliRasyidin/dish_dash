@@ -1,8 +1,8 @@
-import 'package:dish_dash/data/Restaurant.dart';
+import 'package:dish_dash/model/Restaurant.dart';
 import 'package:dish_dash/generated/assets.dart';
 import 'package:dish_dash/ui/component/SearchBox.dart';
-import 'package:dish_dash/ui/screen/DetailRestaurantScreen.dart';
-import 'package:dish_dash/ui/screen/SearchRestaurantScreen.dart';
+import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
+import 'package:dish_dash/ui/screen/search/SearchRestaurantScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

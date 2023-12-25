@@ -1,5 +1,5 @@
-import 'package:dish_dash/data/AssetsFood.dart';
-import 'package:dish_dash/data/Restaurant.dart';
+import 'package:dish_dash/model/AssetsFood.dart';
+import 'package:dish_dash/model/Restaurant.dart';
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
 
@@ -53,7 +53,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
 
   Widget _buildContentFoods(
     BuildContext context,
-    List<Drink> foods,
+    List<Category> foods,
     String title
   ) {
     return Padding(
@@ -73,7 +73,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
     );
   }
 
-  Widget _buildListFoods(List<Drink> foods) {
+  Widget _buildListFoods(List<Category> foods) {
     return ListView.builder(
       itemCount: foods.length,
       physics: const NeverScrollableScrollPhysics(),
@@ -86,7 +86,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
     );
   }
 
-  Widget _buildItemFood(Drink item, BuildContext context, bool isLastIndex) {
+  Widget _buildItemFood(Category item, BuildContext context, bool isLastIndex) {
     return Column(
       children: [
         Row(
