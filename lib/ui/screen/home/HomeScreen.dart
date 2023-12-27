@@ -173,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Hero(
-                tag: "$urlImageMedium/${item.pictureId}",
+                tag: item.pictureId,
                 child: Image.network(
                   "$urlImageMedium/${item.pictureId}",
                   width: double.infinity,

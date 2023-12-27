@@ -10,10 +10,7 @@ class ApiRestaurant {
   }
 
   Future<Response> getDetailRestaurant(String id) async {
-    final response = await dio.get(
-      "/detail",
-      queryParameters: { "id": id },
-    );
+    final response = await dio.get("/detail/$id",);
     return response;
   }
 

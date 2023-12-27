@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -44,16 +43,17 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   @override
   Future<Restaurant> getDetailRestaurant(String id) async {
     try {
-      final response = _api.getDetailRestaurant(id) as Response<RestaurantResponse>;
+      final response = await _api.getDetailRestaurant(id);
       switch (response.statusCode) {
         case 200: {
-          final data = response.data?.toRestaurant();
-          return data!;
+          final data = DetailRestaurantsResponse.fromJson(response.data);
+          return data.restaurant!.toRestaurant();
         }
         case 500: throw HttpException(response.statusMessage ?? "Internal Server Error");
         default: throw HttpException(response.statusMessage ?? "Failed to fetch data restaurants");
       }
     } catch (e) {
+      print("Failed to get detail: $e");
       rethrow;
     }
   }
@@ -62,10 +62,11 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   Future<String> postReview(String id, String name, String review) async {
     try {
       final param = ReviewRequest(id: id, name: name, review: review);
-      final response = _api.postReview(param) as Response<PostReviewResponse>;
+      final response = await _api.postReview(param);
       switch (response.statusCode) {
         case 200: {
-          final message = response.data?.message ?? "Success";
+          final data = PostReviewResponse.fromJson(response.data);
+          final message = data.message ?? "Success";
           return message;
         }
         case 500: throw HttpException(response.statusMessage ?? "Internal Server Error");
@@ -79,11 +80,11 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   @override
   Future<List<Restaurant>> searchRestaurant(String query) async {
     try {
-      final response = _api.searchRestaurant(query) as Response<ListRestaurantsResponse>;
+      final response = await _api.searchRestaurant(query);
       switch (response.statusCode) {
         case 200: {
-          final data = response.data?.restaurants ?? List.empty();
-          return data.map((e) => e.toRestaurant()).toList();
+          final data = ListRestaurantsResponse.fromJson(response.data?.restaurants ?? List.empty());
+          return data.restaurants?.map((e) => e.toRestaurant()).toList() ?? List.empty();
         }
         case 500: throw HttpException(response.statusMessage ?? "Internal Server Error");
         default: throw HttpException(response.statusMessage ?? "Failed to fetch data restaurants");
