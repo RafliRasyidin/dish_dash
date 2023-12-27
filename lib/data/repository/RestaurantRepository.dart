@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:dish_dash/data/remote/api/ApiRestaurant.dart';
 import 'package:dish_dash/data/remote/request/ReviewRequest.dart';
 import 'package:dish_dash/data/remote/response/DetailRestaurantResponse.dart';
