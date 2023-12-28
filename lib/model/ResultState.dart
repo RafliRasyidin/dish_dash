@@ -9,6 +9,7 @@ class ResultState<T> {
   ResultState.failure(this.message) : status = Status.failure;
   ResultState.noConnection() : status = Status.noConnection;
   ResultState.empty() : status = Status.empty;
+  ResultState.idle() : status = Status.idle;
 }
 
-enum Status { loading, success, failure, empty, noConnection }
+enum Status { loading, success, failure, empty, noConnection, idle }

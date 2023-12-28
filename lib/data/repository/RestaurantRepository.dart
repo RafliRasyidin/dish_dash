@@ -52,7 +52,6 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
         default: throw HttpException(response.statusMessage ?? "Failed to fetch data restaurants");
       }
     } catch (e) {
-      print("Failed to get detail: $e");
       rethrow;
     }
   }
@@ -79,16 +78,22 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
   @override
   Future<List<Restaurant>> searchRestaurant(String query) async {
     try {
+      print("Try to search: $query");
       final response = await _api.searchRestaurant(query);
       switch (response.statusCode) {
         case 200: {
-          final data = ListRestaurantsResponse.fromJson(response.data?.restaurants ?? List.empty());
+          final data = ListRestaurantsResponse.fromJson(response.data);
           return data.restaurants?.map((e) => e.toRestaurant()).toList() ?? List.empty();
         }
-        case 500: throw HttpException(response.statusMessage ?? "Internal Server Error");
-        default: throw HttpException(response.statusMessage ?? "Failed to fetch data restaurants");
+        case 500: {
+          throw HttpException(response.statusMessage ?? "Internal Server Error");
+        }
+        default: {
+          throw HttpException(response.statusMessage ?? "Failed to fetch data restaurants");
+        }
       }
     } catch (e) {
+      print("Error: $e");
       rethrow;
     }
   }

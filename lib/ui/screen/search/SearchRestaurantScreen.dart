@@ -1,19 +1,20 @@
+import 'package:dish_dash/data/remote/api/ApiService.dart';
 import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../../model/Restaurant.dart';
+import '../../../model/ResultState.dart';
 import '../../component/SearchBox.dart';
+import 'SearchViewModel.dart';
 
 //ignore: must_be_immutable
 class SearchRestaurantScreen extends StatefulWidget {
   static const routeName = "search_restaurant";
 
-  List<Restaurant> restaurants;
-
-  SearchRestaurantScreen({
+  const SearchRestaurantScreen({
     super.key,
-    required this.restaurants
   });
 
   @override
@@ -22,44 +23,46 @@ class SearchRestaurantScreen extends StatefulWidget {
 
 class _SearchRestaurantScreenState extends State<SearchRestaurantScreen> {
   String _searchedText = "";
-  bool _isEmpty = true;
   late List<Restaurant> restaurants = [];
+  late SearchViewModel viewModel;
+
+  @override
+  void initState() {
+    viewModel = SearchViewModel();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
           backgroundColor: Theme.of(context).colorScheme.background,
-          body: Column(
-            children: [
-              _buildAppBar(context),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Column(
-                    children: [
-                      SearchBox(
-                        text: _searchedText,
-                        autoFocus: true,
-                        hint: "Search restaurant here...",
-                        onTextChange: (newText) {
-                          setState(() {
-                              _searchedText = newText;
-                              if (_searchedText.isEmpty) {
-                                restaurants = [];
-                                _isEmpty = true;
-                              } else{
-                                _searchRestaurants();
-                              }
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 16,),
-                      _buildListRestaurant()
-                    ],
+          body: ChangeNotifierProvider(
+            create: (_) => viewModel,
+            child: Column(
+              children: [
+                _buildAppBar(context),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Column(
+                      children: [
+                        SearchBox(
+                          text: _searchedText,
+                          autoFocus: true,
+                          hint: "Search restaurant here...",
+                          onTextChange: (newText) {
+                            viewModel.searchRestaurant(newText);
+                          },
+                        ),
+                        const SizedBox(height: 16,),
+                        _buildListRestaurant()
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         )
     );
@@ -76,16 +79,36 @@ class _SearchRestaurantScreenState extends State<SearchRestaurantScreen> {
   }
 
   Widget _buildListRestaurant() {
-    return Expanded(
-      child: _isEmpty ? _buildEmptyState() : ListView.builder(
-          itemCount: restaurants.length,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            final item = restaurants[index];
-            final isLastIndex = index == restaurants.length - 1;
-            return _buildItemRestaurant(item, context, isLastIndex);
-          }
-      ),
+    return Consumer<SearchViewModel>(
+      builder: (context, vm, _) {
+        switch (vm.result.status) {
+          case Status.idle: return _buildEmptyState();
+          case Status.loading:
+            return const Center(child: CircularProgressIndicator());
+          case Status.success:
+            return Expanded(
+              child: ListView.builder(
+                itemCount: vm.result.data!.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  final item = vm.result.data![index];
+                  final isLastIndex = index == vm.result.data!.length - 1;
+                  return _buildItemRestaurant(item, context, isLastIndex);
+                }
+            ),
+          );
+          case Status.empty:
+            return _buildEmptyState();
+          case Status.failure:
+            return Center(
+              child: Text(
+                vm.result.message!,
+                style: Theme.of(context).textTheme.displayLarge,
+              ),
+            );
+          default: return Container();
+        }
+      },
     );
   }
 
@@ -108,7 +131,7 @@ class _SearchRestaurantScreenState extends State<SearchRestaurantScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    item.pictureId,
+                    "$urlImageSmall${item.pictureId}",
                     height: 64,
                     width: 64,
                     fit: BoxFit.fill,
@@ -162,17 +185,6 @@ class _SearchRestaurantScreenState extends State<SearchRestaurantScreen> {
         ],
       ),
     );
-  }
-
-  _searchRestaurants() async {
-    setState(() {
-      final searchedRestaurants = widget.restaurants.where((element){
-        final name = element.name.toLowerCase();
-        return name.contains(_searchedText.toLowerCase());
-      }).toList();
-      restaurants = searchedRestaurants;
-      _isEmpty = restaurants.isEmpty;
-    });
   }
 
   Widget _buildAppBar(BuildContext context) {
