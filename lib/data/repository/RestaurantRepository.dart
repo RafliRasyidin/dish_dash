@@ -62,7 +62,7 @@ class RestaurantRepositoryImpl implements RestaurantRepository {
       final param = ReviewRequest(id: id, name: name, review: review);
       final response = await _api.postReview(param);
       switch (response.statusCode) {
-        case 200: {
+        case 200 || 201: {
           final data = PostReviewResponse.fromJson(response.data);
           final message = data.message ?? "Success";
           return message;

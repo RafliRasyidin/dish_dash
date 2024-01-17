@@ -25,7 +25,7 @@ class ApiRestaurant {
   Future<Response> postReview(ReviewRequest param) async {
     final response = await dio.post(
       "/review",
-      data: param
+      data: param.toJson()
     );
     return response;
   }

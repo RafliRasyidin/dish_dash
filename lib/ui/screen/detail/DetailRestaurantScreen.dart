@@ -1,12 +1,12 @@
 import 'package:dish_dash/data/remote/api/ApiService.dart';
 import 'package:dish_dash/model/AssetsFood.dart';
 import 'package:dish_dash/model/Restaurant.dart';
+import 'package:dish_dash/ui/screen/detail/DetailState.dart';
 import 'package:dish_dash/ui/screen/detail/DetailViewModel.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
-
-import '../../../model/ResultState.dart';
 
 //ignore: must_be_immutable
 class DetailRestaurantScreen extends StatefulWidget {
@@ -43,7 +43,9 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
           switch (vm.resultState.status) {
             case Status.loading:
               return const Center(child: CircularProgressIndicator());
-            case Status.success: return _buildContent(vm.resultState.data!);
+            case Status.hasData:
+              widget.restaurant = vm.resultState.data!;
+              return _buildContent(widget.restaurant);
             case Status.noConnection:
               return Container(
                 color: Theme.of(context).colorScheme.background,
@@ -74,6 +76,18 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                   ),
                 ),
               );
+            case Status.success:
+              Fluttertoast.showToast(
+                msg: "Success post review!",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                textColor: Colors.white,
+                fontSize: 16.0
+              );
+              Navigator.pop(context);
+              return _buildContent(widget.restaurant);
             default: return Container();
           }
         },
@@ -91,22 +105,115 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
         final dominantColor = snapshot.data?.dominantColor?.color ?? Theme.of(context).colorScheme.background;
         return Scaffold(
           backgroundColor: Theme.of(context).colorScheme.background,
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(heightImageRestaurant, dominantColor, context, restaurant),
-                const SizedBox(height: 16,),
-                _buildContentRestaurant(context, restaurant),
-                const SizedBox(height: 16,),
-                _buildContentFoods(context, foods, "For You!", restaurant),
-                const SizedBox(height: 16,),
-                _buildContentFoods(context, drinks, "Recommended", restaurant)
-              ],
-            ),
+          body: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeader(heightImageRestaurant, dominantColor, context, restaurant),
+                      const SizedBox(height: 16,),
+                      _buildContentRestaurant(context, restaurant),
+                      const SizedBox(height: 16,),
+                      _buildContentFoods(context, foods, "For You!", restaurant),
+                      const SizedBox(height: 16,),
+                      _buildContentFoods(context, drinks, "Recommended", restaurant)
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                width: double.maxFinite,
+                child: ElevatedButton(
+                  onPressed: () {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (BuildContext context) {
+                        return _buildBottomSheetReview(restaurant);
+                    });
+                  },
+                  child: const Text("Add Review")
+                ),
+              )
+            ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildBottomSheetReview(Restaurant restaurant) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: SizedBox(
+        width: double.maxFinite,
+        height: MediaQuery.of(context).size.height * 0.5,
+        child: Column(
+          children: [
+            Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 24, left: 12, right: 12),
+                      child: Text(
+                        "Review ${restaurant.name}",
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Divider(
+                      height: 1,
+                      thickness: 2,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: TextField(
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        decoration: const InputDecoration(
+                            hintText: "Write your name here...",
+                            label: Text("Your Name")
+                        ),
+                        onChanged: (text) {
+                          _viewModel.onNameChange(text);
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: TextField(
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        decoration: const InputDecoration(
+                            hintText: "Write your review here...",
+                            label: Text("Review")
+                        ),
+                        onChanged: (text) {
+                          _viewModel.onReviewChange(text);
+                        },
+                      ),
+                    )
+                  ],
+                )
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              width: double.maxFinite,
+              child: ElevatedButton(
+                  onPressed: () {
+                    _viewModel.postReview(restaurant.id);
+                  },
+                  child: const Text("Send")
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 
