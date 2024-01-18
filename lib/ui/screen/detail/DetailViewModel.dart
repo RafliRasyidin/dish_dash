@@ -12,7 +12,7 @@ class DetailViewModel extends ChangeNotifier {
 
   DetailState<Restaurant> resultState = DetailState.loading();
 
-  String _review = "";
+  /*String _review = "";
   String _name = "";
 
   void onNameChange(String text) {
@@ -23,7 +23,7 @@ class DetailViewModel extends ChangeNotifier {
   void onReviewChange(String text) {
     _review = text;
     notifyListeners();
-  }
+  }*/
 
   void _setState(DetailState<Restaurant> state) {
     resultState = state;
@@ -43,9 +43,9 @@ class DetailViewModel extends ChangeNotifier {
     });
   }
 
-  Future<void> postReview(String id) async {
+  Future<void> postReview(String id, String name, String review) async {
     _setState(DetailState.loading());
-    _repo.postReview(id, _name, _review)
+    _repo.postReview(id, name, review)
       .then((value) => _setState(DetailState.success(null)))
       .onError((error, stackTrace) {
         if (error is HttpException) {

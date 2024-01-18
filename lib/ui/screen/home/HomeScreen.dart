@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
+import '../../component/NegativeState.dart';
+
 class HomeScreen extends StatefulWidget {
   static const routeName = "home";
 
@@ -45,25 +47,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   case Status.success: return _buildContent(vm.result.data!);
                   case Status.noConnection:
-                    return Center(
-                      child: Text(
-                        "No Internet Connection",
-                        style: Theme.of(context).textTheme.displayLarge,
-                      ),
+                    return NegativeState(
+                        image: Assets.assetsImgNoInternet,
+                        description: "No Internet Connection",
+                        onClick: () { _viewModel.getRestaurants(); },
+                        button: const Text("Try Again")
                     );
                   case Status.empty:
-                    return Center(
-                      child: Text(
-                        "Data Not Found",
-                        style: Theme.of(context).textTheme.displayLarge,
-                      ),
+                    return NegativeState(
+                        image: Assets.assetsImgNoInternet,
+                        description: "Cafe Not Found",
+                        onClick: () { _viewModel.getRestaurants(); },
+                        button: const Text("Try Again")
                     );
                   case Status.failure:
-                    return Center(
-                      child: Text(
-                        vm.result.message!,
-                        style: Theme.of(context).textTheme.displayLarge,
-                      ),
+                    return NegativeState(
+                        image: Assets.assetsImgNoInternet,
+                        description: vm.result.message!,
+                        onClick: () { _viewModel.getRestaurants(); },
+                        button: const Text("Try Again")
                     );
                   default: return Container();
                 }

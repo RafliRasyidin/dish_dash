@@ -8,6 +8,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 
+import '../../../generated/assets.dart';
+import '../../component/NegativeState.dart';
+
 //ignore: must_be_immutable
 class DetailRestaurantScreen extends StatefulWidget {
   static const routeName = "detail_restaurant";
@@ -26,6 +29,9 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
   PaletteGenerator? paletteGenerator;
   bool isExpanded = false;
   late DetailViewModel _viewModel;
+  final _nameController = TextEditingController();
+  final _reviewController = TextEditingController();
+  var _isPostReview = false;
 
   @override
   void initState() {
@@ -47,35 +53,58 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
               widget.restaurant = vm.resultState.data!;
               return _buildContent(widget.restaurant);
             case Status.noConnection:
-              return Container(
-                color: Theme.of(context).colorScheme.background,
-                child: Center(
-                  child: Text(
-                    "No Internet Connection",
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
-                ),
-              );
+              if (_isPostReview) {
+                Fluttertoast.showToast(
+                    msg: "No Internet Connection",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                    textColor: Theme.of(context).colorScheme.onErrorContainer,
+                    fontSize: 16.0
+                );
+                _isPostReview = !_isPostReview;
+                Navigator.pop(context);
+                return _buildContent(widget.restaurant);
+              } else {
+                _isPostReview = !_isPostReview;
+                return NegativeState(
+                    image: Assets.assetsImgNoInternet,
+                    description: "No Internet Connection",
+                    onClick: () { _viewModel.getDetailRestaurant(widget.restaurant.id); },
+                    button: const Text("Try Again")
+                );
+              }
             case Status.empty:
-              return Container(
-                color: Theme.of(context).colorScheme.background,
-                child: Center(
-                  child: Text(
-                    "Data Not Found",
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
-                ),
+              return NegativeState(
+                  image: Assets.assetsImgNoInternet,
+                  description: "Data Not Found",
+                  onClick: () { _viewModel.getDetailRestaurant(widget.restaurant.id); },
+                  button: const Text("Try Again")
               );
             case Status.failure:
-              return Container(
-                color: Theme.of(context).colorScheme.background,
-                child: Center(
-                  child: Text(
-                    vm.resultState.message!,
-                    style: Theme.of(context).textTheme.displayLarge,
-                  ),
-                ),
-              );
+              if (_isPostReview) {
+                Fluttertoast.showToast(
+                    msg: vm.resultState.message!,
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                    textColor: Theme.of(context).colorScheme.onErrorContainer,
+                    fontSize: 16.0
+                );
+                _isPostReview = !_isPostReview;
+                Navigator.pop(context);
+                return _buildContent(widget.restaurant);
+              } else {
+                _isPostReview = !_isPostReview;
+                return NegativeState(
+                    image: Assets.assetsImgNoInternet,
+                    description: vm.resultState.message!,
+                    onClick: () { _viewModel.getDetailRestaurant(widget.restaurant.id); },
+                    button: const Text("Try Again")
+                );
+              }
             case Status.success:
               Fluttertoast.showToast(
                 msg: "Success post review!",
@@ -83,7 +112,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 1,
                 backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                textColor: Colors.white,
+                textColor: Theme.of(context).colorScheme.onPrimaryContainer,
                 fontSize: 16.0
               );
               Navigator.pop(context);
@@ -174,28 +203,24 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: TextField(
+                        controller: _nameController,
                         style: Theme.of(context).textTheme.bodyMedium,
                         decoration: const InputDecoration(
                             hintText: "Write your name here...",
                             label: Text("Your Name")
                         ),
-                        onChanged: (text) {
-                          _viewModel.onNameChange(text);
-                        },
                       ),
                     ),
                     const SizedBox(height: 16),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: TextField(
+                        controller: _reviewController,
                         style: Theme.of(context).textTheme.bodyMedium,
                         decoration: const InputDecoration(
                             hintText: "Write your review here...",
                             label: Text("Review")
                         ),
-                        onChanged: (text) {
-                          _viewModel.onReviewChange(text);
-                        },
                       ),
                     )
                   ],
@@ -206,7 +231,26 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
               width: double.maxFinite,
               child: ElevatedButton(
                   onPressed: () {
-                    _viewModel.postReview(restaurant.id);
+                    final name = _nameController.text;
+                    final review = _reviewController.text;
+                    if (name.isEmpty || review.isEmpty) {
+                      Fluttertoast.showToast(
+                          msg: "Name or review can't be empty!",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                          textColor: Theme.of(context).colorScheme.onErrorContainer,
+                          fontSize: 16.0
+                      );
+                    } else {
+                      _viewModel.postReview(
+                          restaurant.id,
+                          _nameController.text,
+                          _reviewController.text
+                      );
+                      _isPostReview = true;
+                    }
                   },
                   child: const Text("Send")
               ),

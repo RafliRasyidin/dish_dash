@@ -1,7 +1,8 @@
 import 'package:dish_dash/data/remote/api/ApiService.dart';
+import 'package:dish_dash/generated/assets.dart';
+import 'package:dish_dash/ui/component/NegativeState.dart';
 import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../model/Restaurant.dart';
@@ -52,6 +53,7 @@ class _SearchRestaurantScreenState extends State<SearchRestaurantScreen> {
                           autoFocus: true,
                           hint: "Search restaurant here...",
                           onTextChange: (newText) {
+                            _searchedText = newText;
                             viewModel.searchRestaurant(newText);
                           },
                         ),
@@ -69,12 +71,11 @@ class _SearchRestaurantScreenState extends State<SearchRestaurantScreen> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: SvgPicture.asset(
-        "assets/empty_search.svg",
-        width: 180,
-        height: 180,
-      ),
+    return NegativeState(
+        image: Assets.assetsEmptySearch,
+        description: "Cafe Not Found",
+        onClick: () { viewModel.searchRestaurant(_searchedText); },
+        button: const Text("Try Again")
     );
   }
 
@@ -82,7 +83,12 @@ class _SearchRestaurantScreenState extends State<SearchRestaurantScreen> {
     return Consumer<SearchViewModel>(
       builder: (context, vm, _) {
         switch (vm.result.status) {
-          case Status.idle: return _buildEmptyState();
+          case Status.idle:
+            return NegativeState(
+              image: Assets.assetsEmptySearch,
+              description: "Search Fancy Restaurant",
+              onClick: () { viewModel.searchRestaurant(_searchedText); },
+            );
           case Status.loading:
             return const Center(child: CircularProgressIndicator());
           case Status.success:
@@ -100,11 +106,18 @@ class _SearchRestaurantScreenState extends State<SearchRestaurantScreen> {
           case Status.empty:
             return _buildEmptyState();
           case Status.failure:
-            return Center(
-              child: Text(
-                vm.result.message!,
-                style: Theme.of(context).textTheme.displayLarge,
-              ),
+            return NegativeState(
+              image: Assets.assetsImgNoInternet,
+              description: vm.result.message!,
+              onClick: () { viewModel.searchRestaurant(_searchedText); },
+              button: const Text("Try Again")
+            );
+          case Status.noConnection:
+            return NegativeState(
+                image: Assets.assetsImgNoInternet,
+                description: "No Internet Connection",
+                onClick: () { viewModel.searchRestaurant(_searchedText); },
+                button: const Text("Try Again")
             );
           default: return Container();
         }
