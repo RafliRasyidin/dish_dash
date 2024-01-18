@@ -482,7 +482,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
   }
 
   Future<PaletteGenerator?> _getColorPalette(Restaurant restaurant) async {
-    final imageRestaurant = Image.network(restaurant.pictureId);
+    final imageRestaurant = Image.network("$urlImageMedium/${restaurant.pictureId}");
     paletteGenerator = await PaletteGenerator.fromImageProvider(
       imageRestaurant.image,
       size: Size(imageRestaurant.width ?? 100, imageRestaurant.height ?? 100)
