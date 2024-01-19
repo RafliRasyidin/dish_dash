@@ -90,7 +90,10 @@ class _SearchRestaurantScreenState extends State<SearchRestaurantScreen> {
               onClick: () { viewModel.searchRestaurant(_searchedText); },
             );
           case Status.loading:
-            return const Center(child: CircularProgressIndicator());
+            return Container(
+                color: Theme.of(context).colorScheme.background,
+                child: const Center(child: CircularProgressIndicator())
+            );
           case Status.success:
             return Expanded(
               child: ListView.builder(

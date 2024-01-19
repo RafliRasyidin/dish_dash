@@ -47,7 +47,10 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
         builder: (context, vm, _) {
           switch (vm.resultState.status) {
             case Status.loading:
-              return const Center(child: CircularProgressIndicator());
+              return Container(
+                color: Theme.of(context).colorScheme.background,
+                child: const Center(child: CircularProgressIndicator())
+              );
             case Status.hasData:
               widget.restaurant = vm.resultState.data!;
               return _buildContent(widget.restaurant);

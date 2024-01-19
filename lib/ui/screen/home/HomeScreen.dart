@@ -42,8 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, vm, _) {
                 switch (vm.result.status) {
                   case Status.loading:
-                    return const Center(
-                      child: CircularProgressIndicator(),
+                    return Container(
+                        color: Theme.of(context).colorScheme.background,
+                        child: const Center(child: CircularProgressIndicator())
                     );
                   case Status.success: return _buildContent(vm.result.data!);
                   case Status.noConnection:
