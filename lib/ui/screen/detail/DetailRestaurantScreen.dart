@@ -31,7 +31,6 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
   late DetailViewModel _viewModel;
   final _nameController = TextEditingController();
   final _reviewController = TextEditingController();
-  var _isPostReview = false;
 
   @override
   void initState() {
@@ -53,7 +52,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
               widget.restaurant = vm.resultState.data!;
               return _buildContent(widget.restaurant);
             case Status.noConnection:
-              if (_isPostReview) {
+              if (vm.isPostReview) {
                 Fluttertoast.showToast(
                     msg: "No Internet Connection",
                     toastLength: Toast.LENGTH_SHORT,
@@ -63,11 +62,10 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                     textColor: Theme.of(context).colorScheme.onErrorContainer,
                     fontSize: 16.0
                 );
-                _isPostReview = !_isPostReview;
-                Navigator.pop(context);
+                vm.setStatePostReview(false);
                 return _buildContent(widget.restaurant);
               } else {
-                _isPostReview = !_isPostReview;
+                vm.setStatePostReview(false);
                 return NegativeState(
                     image: Assets.assetsImgNoInternet,
                     description: "No Internet Connection",
@@ -83,7 +81,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                   button: const Text("Try Again")
               );
             case Status.failure:
-              if (_isPostReview) {
+              if (vm.isPostReview) {
                 Fluttertoast.showToast(
                     msg: vm.resultState.message!,
                     toastLength: Toast.LENGTH_SHORT,
@@ -93,11 +91,10 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                     textColor: Theme.of(context).colorScheme.onErrorContainer,
                     fontSize: 16.0
                 );
-                _isPostReview = !_isPostReview;
-                Navigator.pop(context);
+                vm.setStatePostReview(false);
                 return _buildContent(widget.restaurant);
               } else {
-                _isPostReview = !_isPostReview;
+                vm.setStatePostReview(false);
                 return NegativeState(
                     image: Assets.assetsImgNoInternet,
                     description: vm.resultState.message!,
@@ -106,16 +103,18 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                 );
               }
             case Status.success:
-              Fluttertoast.showToast(
-                msg: "Success post review!",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                textColor: Theme.of(context).colorScheme.onPrimaryContainer,
-                fontSize: 16.0
-              );
-              Navigator.pop(context);
+              if (vm.isPostReview) {
+                Fluttertoast.showToast(
+                    msg: "Success post review!",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                    textColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                    fontSize: 16.0
+                );
+              }
+              vm.setStatePostReview(false);
               return _buildContent(widget.restaurant);
             default: return Container();
           }
@@ -249,7 +248,10 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                           _nameController.text,
                           _reviewController.text
                       );
-                      _isPostReview = true;
+                      _viewModel.setStatePostReview(true);
+                      _nameController.clear();
+                      _reviewController.clear();
+                      Navigator.pop(context);
                     }
                   },
                   child: const Text("Send")

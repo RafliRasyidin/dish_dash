@@ -12,18 +12,13 @@ class DetailViewModel extends ChangeNotifier {
 
   DetailState<Restaurant> resultState = DetailState.loading();
 
-  /*String _review = "";
-  String _name = "";
+  var _isPostReview = false;
+  bool get isPostReview => _isPostReview;
 
-  void onNameChange(String text) {
-    _name = text;
+  void setStatePostReview(bool isPostingReview) {
+    _isPostReview = isPostingReview;
     notifyListeners();
   }
-
-  void onReviewChange(String text) {
-    _review = text;
-    notifyListeners();
-  }*/
 
   void _setState(DetailState<Restaurant> state) {
     resultState = state;

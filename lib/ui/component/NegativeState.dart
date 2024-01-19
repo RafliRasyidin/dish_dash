@@ -23,32 +23,35 @@ class _NegativeStateState extends State<NegativeState> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            widget.image,
-            width: 140,
-            height: 140,
-          ),
-          Text(
-            widget.description,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 16),
-          Visibility(
-            visible: widget.button != null,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              width: double.infinity,
-              child: ElevatedButton(
-                  onPressed: widget.onClick,
-                  child: widget.button
-              ),
-            )
-          ),
-        ],
+    return Container(
+      color: Theme.of(context).colorScheme.background,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              widget.image,
+              width: 140,
+              height: 140,
+            ),
+            Text(
+              widget.description,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            Visibility(
+              visible: widget.button != null,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: widget.onClick,
+                    child: widget.button
+                ),
+              )
+            ),
+          ],
+        ),
       ),
     );;
   }
