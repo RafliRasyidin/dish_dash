@@ -5,6 +5,8 @@ import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/repository/RestaurantRepository.dart';
+import '../../../di/Locator.dart';
 import '../../../model/Restaurant.dart';
 import '../../../model/ResultState.dart';
 import '../../component/SearchBox.dart';
@@ -29,7 +31,7 @@ class _SearchRestaurantScreenState extends State<SearchRestaurantScreen> {
 
   @override
   void initState() {
-    viewModel = SearchViewModel();
+    viewModel = SearchViewModel(locator<RestaurantRepositoryImpl>());
     super.initState();
   }
 

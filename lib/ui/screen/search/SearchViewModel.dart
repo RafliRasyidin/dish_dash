@@ -6,7 +6,9 @@ import 'package:dish_dash/model/ResultState.dart';
 import 'package:flutter/material.dart';
 
 class SearchViewModel extends ChangeNotifier {
-  final _repo = RestaurantRepositoryImpl();
+  final RestaurantRepositoryImpl _repo;
+
+  SearchViewModel(this._repo);
 
   ResultState<List<Restaurant>> result = ResultState.idle();
 

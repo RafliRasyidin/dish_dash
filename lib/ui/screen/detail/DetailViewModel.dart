@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import '../../../model/Restaurant.dart';
 
 class DetailViewModel extends ChangeNotifier {
-  final _repo = RestaurantRepositoryImpl();
+  final RestaurantRepositoryImpl _repo;
+
+  DetailViewModel(this._repo);
 
   DetailState<Restaurant> resultState = DetailState.loading();
 

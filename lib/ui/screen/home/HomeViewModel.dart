@@ -7,13 +7,13 @@ import '../../../model/Restaurant.dart';
 import '../../../model/ResultState.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  final _repo = RestaurantRepositoryImpl();
+  final RestaurantRepositoryImpl _repo;
 
-  ResultState<List<Restaurant>> result = ResultState.loading();
-
-  HomeViewModel() {
+  HomeViewModel(this._repo) {
     getRestaurants();
   }
+
+  ResultState<List<Restaurant>> result = ResultState.loading();
 
   void _setState(ResultState<List<Restaurant>> state) {
     result = state;

@@ -20,7 +20,9 @@ abstract class RestaurantRepository {
 }
 
 class RestaurantRepositoryImpl implements RestaurantRepository {
-  final _api = ApiRestaurant();
+  final ApiRestaurant _api;
+
+  RestaurantRepositoryImpl(this._api);
 
   @override
   Future<List<Restaurant>> getRestaurants() async {

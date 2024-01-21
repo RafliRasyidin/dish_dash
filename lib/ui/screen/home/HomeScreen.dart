@@ -1,4 +1,6 @@
 import 'package:dish_dash/data/remote/api/ApiService.dart';
+import 'package:dish_dash/data/repository/RestaurantRepository.dart';
+import 'package:dish_dash/di/Locator.dart';
 import 'package:dish_dash/model/Restaurant.dart';
 import 'package:dish_dash/generated/assets.dart';
 import 'package:dish_dash/model/ResultState.dart';
@@ -27,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    _viewModel = HomeViewModel();
+    _viewModel = HomeViewModel(locator<RestaurantRepositoryImpl>());
     super.initState();
   }
 
@@ -86,24 +88,46 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             _buildTextNearbyRestaurant(context, restaurants),
             const SizedBox(height: 16),
-            InkWell(
-              child: SearchBox(
-                text: _searchedText,
-                hint: "Search restaurant here...",
-                onTextChange: (newText) {
-                  setState(() {
-                    _searchedText = newText;
-                  });
-                },
-                enabled: false,
-              ),
-              onTap: () {
-                Navigator.pushNamed(
-                    context,
-                    SearchRestaurantScreen.routeName,
-                    arguments: restaurants
-                );
-              },
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    child: SearchBox(
+                      text: _searchedText,
+                      hint: "Search restaurant here...",
+                      onTextChange: (newText) {
+                        setState(() {
+                          _searchedText = newText;
+                        });
+                      },
+                      enabled: false,
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context,
+                          SearchRestaurantScreen.routeName,
+                          arguments: restaurants
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12),
+                InkWell(
+                  child: Icon(
+                    Icons.bookmark,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  onTap: () {},
+                ),
+                const SizedBox(width: 12),
+                InkWell(
+                  child: Icon(
+                    Icons.settings,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
+                  onTap: () {},
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             _buildListTitleSection(context, "Best Restaurant"),

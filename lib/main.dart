@@ -1,3 +1,5 @@
+import 'package:dish_dash/data/local/db/dish_dash_database.dart';
+import 'package:dish_dash/di/Locator.dart';
 import 'package:dish_dash/model/Restaurant.dart';
 import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
 import 'package:dish_dash/ui/screen/home/HomeScreen.dart';
@@ -6,7 +8,9 @@ import 'package:dish_dash/ui/styles/Colors.dart';
 import 'package:dish_dash/ui/styles/Typography.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDependencies();
   runApp(const MyApp());
 }
 

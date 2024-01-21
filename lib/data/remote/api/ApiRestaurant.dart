@@ -1,21 +1,23 @@
 import 'package:dio/dio.dart';
-import 'package:dish_dash/data/remote/api/ApiService.dart';
 import 'package:dish_dash/data/remote/request/ReviewRequest.dart';
 
 class ApiRestaurant {
+  final Dio _dio;
+
+  ApiRestaurant(this._dio);
 
   Future<Response> getRestaurants() async {
-    final response = await dio.get("/list");
+    final response = await _dio.get("/list");
     return response;
   }
 
   Future<Response> getDetailRestaurant(String id) async {
-    final response = await dio.get("/detail/$id",);
+    final response = await _dio.get("/detail/$id",);
     return response;
   }
 
   Future<Response> searchRestaurant(String query) async {
-    final response = await dio.get(
+    final response = await _dio.get(
       "/search",
       queryParameters: { "q" : query }
     );
@@ -23,7 +25,7 @@ class ApiRestaurant {
   }
 
   Future<Response> postReview(ReviewRequest param) async {
-    final response = await dio.post(
+    final response = await _dio.post(
       "/review",
       data: param.toJson()
     );

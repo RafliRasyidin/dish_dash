@@ -8,6 +8,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/repository/RestaurantRepository.dart';
+import '../../../di/Locator.dart';
 import '../../../generated/assets.dart';
 import '../../component/NegativeState.dart';
 
@@ -34,7 +36,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
 
   @override
   void initState() {
-    _viewModel = DetailViewModel();
+    _viewModel = DetailViewModel(locator<RestaurantRepositoryImpl>());
     _viewModel.getDetailRestaurant(widget.restaurant.id);
     super.initState();
   }
