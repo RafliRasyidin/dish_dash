@@ -6,8 +6,10 @@ import 'package:dish_dash/generated/assets.dart';
 import 'package:dish_dash/model/ResultState.dart';
 import 'package:dish_dash/ui/component/SearchBox.dart';
 import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
+import 'package:dish_dash/ui/screen/favorite/FavoriteScreen.dart';
 import 'package:dish_dash/ui/screen/home/HomeViewModel.dart';
 import 'package:dish_dash/ui/screen/search/SearchRestaurantScreen.dart';
+import 'package:dish_dash/ui/screen/setting/SettingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -111,22 +113,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 ),
-                const SizedBox(width: 12),
-                InkWell(
-                  child: Icon(
-                    Icons.bookmark,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                  onTap: () {},
-                ),
-                const SizedBox(width: 12),
-                InkWell(
-                  child: Icon(
-                    Icons.settings,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                  onTap: () {},
-                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -189,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.pushNamed(
             context,
             DetailRestaurantScreen.routeName,
-            arguments: item
+            arguments: item.toDetailRestaurant()
         );
       },
       child: Padding(
@@ -256,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.pushNamed(
           context,
           DetailRestaurantScreen.routeName,
-          arguments: item
+          arguments: item.toDetailRestaurant()
         );
       },
       child: Padding(
@@ -335,16 +321,42 @@ class _HomeScreenState extends State<HomeScreen> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SvgPicture.asset(
-          Assets.assetsIcPinLocation,
-          height: 16,
-          width: 16,
-          colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.onBackground, BlendMode.srcIn),
+        Expanded(
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                Assets.assetsIcPinLocation,
+                height: 16,
+                width: 16,
+                colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.onBackground, BlendMode.srcIn),
+              ),
+              const SizedBox(width: 8,),
+              Text(
+                "${restaurants.length} Restaurants near you...",
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+            ],
+          )
         ),
-        const SizedBox(width: 8,),
-        Text(
-          "${restaurants.length} Restaurants near you...",
-          style: Theme.of(context).textTheme.labelMedium,
+        const SizedBox(width: 12),
+        InkWell(
+          child: Icon(
+            Icons.favorite,
+            color: Theme.of(context).colorScheme.onBackground,
+          ),
+          onTap: () {
+            Navigator.pushNamed(context, FavoriteScreen.routeName);
+          },
+        ),
+        const SizedBox(width: 12),
+        InkWell(
+          child: Icon(
+            Icons.settings,
+            color: Theme.of(context).colorScheme.onBackground,
+          ),
+          onTap: () {
+            Navigator.pushNamed(context, SettingScreen.routeName);
+          },
         ),
       ],
     );

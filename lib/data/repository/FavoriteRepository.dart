@@ -3,7 +3,7 @@ import 'package:dish_dash/data/local/entities/FavoriteEntity.dart';
 import '../local/dao/FavoriteDao.dart';
 
 abstract class FavoriteRepository {
-  Future<List<Favorite>> getFavorites();
+  Future<List<Favorite>> getFavorites(String search);
   Future<Favorite?> getFavoriteById(String id);
   Future<void> insertFavorite(Favorite favorite);
   Future<void> deleteFavorite(Favorite favorite);
@@ -21,9 +21,14 @@ class FavoriteRepositoryImpl implements FavoriteRepository {
   }
 
   @override
-  Future<List<Favorite>> getFavorites() async {
-    final data = await _dao.getFavorites();
-    return data;
+  Future<List<Favorite>> getFavorites(String search) async {
+    if (search.isNotEmpty) {
+      final data = await _dao.searchFavorite(search);
+      return data;
+    } else {
+      final data = await _dao.getFavorites();
+      return data;
+    }
   }
 
   @override

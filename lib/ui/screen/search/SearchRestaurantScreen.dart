@@ -1,6 +1,8 @@
 import 'package:dish_dash/data/remote/api/ApiService.dart';
 import 'package:dish_dash/generated/assets.dart';
+import 'package:dish_dash/ui/component/ItemRestaurant.dart';
 import 'package:dish_dash/ui/component/NegativeState.dart';
+import 'package:dish_dash/ui/component/Toolbar.dart';
 import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +46,7 @@ class _SearchRestaurantScreenState extends State<SearchRestaurantScreen> {
             create: (_) => viewModel,
             child: Column(
               children: [
-                _buildAppBar(context),
+                const Toolbar(title: "Search"),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -104,7 +106,17 @@ class _SearchRestaurantScreenState extends State<SearchRestaurantScreen> {
                 itemBuilder: (context, index) {
                   final item = vm.result.data![index];
                   final isLastIndex = index == vm.result.data!.length - 1;
-                  return _buildItemRestaurant(item, context, isLastIndex);
+                  return ItemRestaurant(
+                    restaurant: item,
+                    isLastIndex: isLastIndex,
+                    onItemClick: () {
+                      Navigator.pushNamed(
+                          context,
+                          DetailRestaurantScreen.routeName,
+                          arguments: item.toDetailRestaurant()
+                      );
+                    }
+                  );
                 }
             ),
           );

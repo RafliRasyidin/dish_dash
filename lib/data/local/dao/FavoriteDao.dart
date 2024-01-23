@@ -4,7 +4,7 @@ import 'package:floor/floor.dart';
 
 @dao
 abstract class FavoriteDao {
-  @Query("SELECT * FROM Favorite")
+  @Query("SELECT * FROM favorite")
   Future<List<Favorite>> getFavorites();
 
   @insert
@@ -13,6 +13,9 @@ abstract class FavoriteDao {
   @delete
   Future<void> deleteFavorite(Favorite favorite);
   
-  @Query("SELECT * FROM Favorite WHERE id = :id")
+  @Query("SELECT * FROM favorite WHERE id = :id")
   Future<Favorite?> getFavoriteById(String id);
+
+  @Query("SELECT * FROM favorite WHERE name LIKE '%'||:search||'%'")
+  Future<List<Favorite>> searchFavorite(String search);
 }

@@ -1,5 +1,7 @@
 
 
+import 'package:dish_dash/model/DetailRestaurant.dart';
+
 class Restaurant {
   String id;
   String name;
@@ -103,4 +105,18 @@ class Menus {
         foods: foods,
         drinks: drinks,
       );
+}
+
+extension RestaurantExt on Restaurant {
+  DetailRestaurant toDetailRestaurant() => DetailRestaurant(
+    id: id,
+    name: name,
+    description: description,
+    city: city, address: address,
+    pictureId: pictureId,
+    categories: categories,
+    menus: menus,
+    rating: rating,
+    customerReviews: customerReviews
+  );
 }

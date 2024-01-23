@@ -1,9 +1,10 @@
-import 'package:dish_dash/data/local/db/dish_dash_database.dart';
 import 'package:dish_dash/di/Locator.dart';
-import 'package:dish_dash/model/Restaurant.dart';
+import 'package:dish_dash/model/DetailRestaurant.dart';
 import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
+import 'package:dish_dash/ui/screen/favorite/FavoriteScreen.dart';
 import 'package:dish_dash/ui/screen/home/HomeScreen.dart';
 import 'package:dish_dash/ui/screen/search/SearchRestaurantScreen.dart';
+import 'package:dish_dash/ui/screen/setting/SettingScreen.dart';
 import 'package:dish_dash/ui/styles/Colors.dart';
 import 'package:dish_dash/ui/styles/Typography.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16.0)
             )
-          )
+          ),
         )
       ),
       darkTheme: ThemeData(
@@ -57,9 +58,11 @@ class MyApp extends StatelessWidget {
       routes: {
         HomeScreen.routeName: (context) => const HomeScreen(),
         DetailRestaurantScreen.routeName: (context) => DetailRestaurantScreen(
-          restaurant: ModalRoute.of(context)?.settings.arguments as Restaurant
+          restaurant: ModalRoute.of(context)?.settings.arguments as DetailRestaurant
         ),
-        SearchRestaurantScreen.routeName: (context) => const SearchRestaurantScreen()
+        SearchRestaurantScreen.routeName: (context) => const SearchRestaurantScreen(),
+        FavoriteScreen.routeName: (context) => FavoriteScreen(),
+        SettingScreen.routeName: (context) => SettingScreen()
       },
     );
   }

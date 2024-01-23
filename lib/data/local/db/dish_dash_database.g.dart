@@ -85,7 +85,7 @@ class _$DishDashDatabase extends DishDashDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Favorite` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `city` TEXT NOT NULL, `address` TEXT NOT NULL, `pictureId` TEXT NOT NULL, `rating` REAL NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `favorite` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `city` TEXT NOT NULL, `address` TEXT NOT NULL, `pictureId` TEXT NOT NULL, `rating` REAL NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -106,7 +106,7 @@ class _$FavoriteDao extends FavoriteDao {
   )   : _queryAdapter = QueryAdapter(database),
         _favoriteInsertionAdapter = InsertionAdapter(
             database,
-            'Favorite',
+            'favorite',
             (Favorite item) => <String, Object?>{
                   'id': item.id,
                   'name': item.name,
@@ -118,7 +118,7 @@ class _$FavoriteDao extends FavoriteDao {
                 }),
         _favoriteDeletionAdapter = DeletionAdapter(
             database,
-            'Favorite',
+            'favorite',
             ['id'],
             (Favorite item) => <String, Object?>{
                   'id': item.id,
@@ -142,7 +142,7 @@ class _$FavoriteDao extends FavoriteDao {
 
   @override
   Future<List<Favorite>> getFavorites() async {
-    return _queryAdapter.queryList('SELECT * FROM Favorite',
+    return _queryAdapter.queryList('SELECT * FROM favorite',
         mapper: (Map<String, Object?> row) => Favorite(
             id: row['id'] as String,
             name: row['name'] as String,
@@ -155,7 +155,7 @@ class _$FavoriteDao extends FavoriteDao {
 
   @override
   Future<Favorite?> getFavoriteById(String id) async {
-    return _queryAdapter.query('SELECT * FROM Favorite WHERE id = ?1',
+    return _queryAdapter.query('SELECT * FROM favorite WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Favorite(
             id: row['id'] as String,
             name: row['name'] as String,
@@ -165,6 +165,21 @@ class _$FavoriteDao extends FavoriteDao {
             pictureId: row['pictureId'] as String,
             rating: row['rating'] as double),
         arguments: [id]);
+  }
+
+  @override
+  Future<List<Favorite>> searchFavorite(String search) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM favorite WHERE name LIKE \'%\'||?1||\'%\'',
+        mapper: (Map<String, Object?> row) => Favorite(
+            id: row['id'] as String,
+            name: row['name'] as String,
+            description: row['description'] as String,
+            city: row['city'] as String,
+            address: row['address'] as String,
+            pictureId: row['pictureId'] as String,
+            rating: row['rating'] as double),
+        arguments: [search]);
   }
 
   @override

@@ -37,6 +37,7 @@ class _NegativeStateState extends State<NegativeState> {
             Text(
               widget.description,
               style: Theme.of(context).textTheme.titleLarge,
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
             Visibility(

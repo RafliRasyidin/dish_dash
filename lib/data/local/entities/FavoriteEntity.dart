@@ -1,6 +1,7 @@
+import 'package:dish_dash/model/Restaurant.dart';
 import 'package:floor/floor.dart';
 
-@entity
+@Entity(tableName: "favorite")
 class Favorite {
   @primaryKey
   final String id;
@@ -44,4 +45,19 @@ class Favorite {
       rating: map['rating'] as double,
     );
   }
+}
+
+extension FavoriteEntityExt on Favorite {
+  Restaurant toRestaurant() => Restaurant(
+    id: id,
+    name: name,
+    description: description,
+    city: city,
+    address: address,
+    pictureId: pictureId,
+    categories: List.empty(),
+    menus: Menus(foods: List.empty(), drinks: List.empty()),
+    rating: rating,
+    customerReviews: List.empty()
+  );
 }

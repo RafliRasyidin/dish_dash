@@ -1,5 +1,7 @@
 import 'package:dish_dash/data/remote/api/ApiService.dart';
+import 'package:dish_dash/data/repository/FavoriteRepository.dart';
 import 'package:dish_dash/model/AssetsFood.dart';
+import 'package:dish_dash/model/DetailRestaurant.dart';
 import 'package:dish_dash/model/Restaurant.dart';
 import 'package:dish_dash/ui/screen/detail/DetailState.dart';
 import 'package:dish_dash/ui/screen/detail/DetailViewModel.dart';
@@ -16,7 +18,7 @@ import '../../component/NegativeState.dart';
 //ignore: must_be_immutable
 class DetailRestaurantScreen extends StatefulWidget {
   static const routeName = "detail_restaurant";
-  Restaurant restaurant;
+  DetailRestaurant restaurant;
 
   DetailRestaurantScreen({
     super.key,
@@ -36,7 +38,10 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
 
   @override
   void initState() {
-    _viewModel = DetailViewModel(locator<RestaurantRepositoryImpl>());
+    _viewModel = DetailViewModel(
+      locator<RestaurantRepositoryImpl>(),
+      locator<FavoriteRepositoryImpl>()
+    );
     _viewModel.getDetailRestaurant(widget.restaurant.id);
     super.initState();
   }
@@ -128,7 +133,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
     );
   }
 
-  Widget _buildContent(Restaurant restaurant) {
+  Widget _buildContent(DetailRestaurant restaurant) {
     final heightImageRestaurant = MediaQuery.of(context).size.height * 0.3;
     final foods = restaurant.menus.foods;
     final drinks = restaurant.menus.drinks;
@@ -159,16 +164,45 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 width: double.maxFinite,
-                child: ElevatedButton(
-                  onPressed: () {
-                    showModalBottomSheet<void>(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (BuildContext context) {
-                        return _buildBottomSheetReview(restaurant);
-                    });
-                  },
-                  child: const Text("Add Review")
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primary
+                        ),
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (BuildContext context) {
+                              return _buildBottomSheetReview(restaurant);
+                          });
+                        },
+                        child: const Text("Add Review")
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    InkWell(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context).colorScheme.primary
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Icon(
+                            restaurant.isFavorite ? Icons.favorite : Icons.favorite_border,
+                            size: 24,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        _viewModel.setFavorite(restaurant);
+                      },
+                    ),
+                  ],
                 ),
               )
             ],
@@ -178,7 +212,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
     );
   }
 
-  Widget _buildBottomSheetReview(Restaurant restaurant) {
+  Widget _buildBottomSheetReview(DetailRestaurant restaurant) {
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: SizedBox(
@@ -272,7 +306,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
     BuildContext context,
     List<Category> foods,
     String title,
-    Restaurant restaurant
+    DetailRestaurant restaurant
   ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -291,7 +325,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
     );
   }
 
-  Widget _buildListFoods(List<Category> foods, Restaurant restaurant) {
+  Widget _buildListFoods(List<Category> foods, DetailRestaurant restaurant) {
     return ListView.builder(
       itemCount: foods.length,
       physics: const NeverScrollableScrollPhysics(),
@@ -308,7 +342,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
       Category item,
       BuildContext context,
       bool isLastIndex,
-      Restaurant restaurant
+      DetailRestaurant restaurant
   ) {
     return Column(
       children: [
@@ -361,7 +395,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
     );
   }
 
-  Widget _buildContentRestaurant(BuildContext context, Restaurant restaurant) {
+  Widget _buildContentRestaurant(BuildContext context, DetailRestaurant restaurant) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Column(
@@ -439,7 +473,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
       double heightImageRestaurant,
       Color dominantColor,
       BuildContext context,
-      Restaurant restaurant
+      DetailRestaurant restaurant
   ) {
     return Stack(
       children: [
@@ -488,7 +522,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
     );
   }
 
-  Future<PaletteGenerator?> _getColorPalette(Restaurant restaurant) async {
+  Future<PaletteGenerator?> _getColorPalette(DetailRestaurant restaurant) async {
     final imageRestaurant = Image.network("$urlImageMedium/${restaurant.pictureId}");
     paletteGenerator = await PaletteGenerator.fromImageProvider(
       imageRestaurant.image,
