@@ -29,6 +29,30 @@ class DetailRestaurant {
     this.isFavorite = false
   });
 
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "description": description,
+    "city": city,
+    "address": address,
+    "pictureId": pictureId,
+    "rating": rating,
+    "isFavorite": isFavorite
+  };
+
+  factory DetailRestaurant.fromJson(Map<String, dynamic> json) => DetailRestaurant(
+    id: json["id"],
+    name: json["name"],
+    description: json["description"],
+    city: json["city"],
+    address: json["address"],
+    pictureId: json["pictureId"],
+    rating: json["rating"]?.toDouble(),
+    categories: List.empty(),
+    menus: Menus(foods: List.empty(), drinks: List.empty()),
+    customerReviews: List.empty()
+  );
+
   DetailRestaurant copyWith({
     String? id,
     String? name,
@@ -68,4 +92,6 @@ extension DetailRestaurantExt on DetailRestaurant {
     pictureId: pictureId,
     rating: rating
   );
+
+
 }
