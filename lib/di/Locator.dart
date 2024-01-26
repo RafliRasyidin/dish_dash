@@ -36,5 +36,5 @@ Future<void> initDependencies() async {
   locator.registerSingleton(AppPreferencesImpl(locator<SharedPreferences>()));
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  locator.registerLazySingleton(() => flutterLocalNotificationsPlugin);
+  locator.registerSingleton(flutterLocalNotificationsPlugin);
 }
