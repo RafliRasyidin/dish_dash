@@ -29,6 +29,7 @@ class BackgroundService {
     );
   }
 
+  @pragma('vm:entry-point')
   static Future<void> callback() async {
     try {
       print("Schedule Reminder!");
