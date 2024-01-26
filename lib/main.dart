@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:dish_dash/di/Locator.dart';
 import 'package:dish_dash/model/DetailRestaurant.dart';
