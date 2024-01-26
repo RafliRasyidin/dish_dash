@@ -20,7 +20,7 @@ class NotificationHelper {
   static const channelDescription = "Reminder Recommended Restaurant";
 
   Future<void> initNotifications(FlutterLocalNotificationsPlugin plugin) async {
-    var initSettingAndroid = const AndroidInitializationSettings("logo_app");
+    var initSettingAndroid = const AndroidInitializationSettings("app_icon");
     var initSettingIos = const DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
@@ -65,7 +65,7 @@ class NotificationHelper {
     var restaurantName = restaurant.name;
 
     await plugin.show(
-      919,
+      0,
       titleNotification,
       restaurantName,
       platformChannelSpecifics,

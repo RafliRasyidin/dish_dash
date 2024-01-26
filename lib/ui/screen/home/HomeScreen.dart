@@ -4,6 +4,7 @@ import 'package:dish_dash/di/Locator.dart';
 import 'package:dish_dash/model/Restaurant.dart';
 import 'package:dish_dash/generated/assets.dart';
 import 'package:dish_dash/model/ResultState.dart';
+import 'package:dish_dash/service/BackgroundService.dart';
 import 'package:dish_dash/ui/component/SearchBox.dart';
 import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
 import 'package:dish_dash/ui/screen/favorite/FavoriteScreen.dart';
@@ -42,8 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    selectNotificationSubject.close();
     super.dispose();
+    selectNotificationSubject.close();
   }
 
   @override

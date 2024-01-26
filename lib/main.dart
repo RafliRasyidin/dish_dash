@@ -22,9 +22,7 @@ Future<void> main() async {
   final NotificationHelper _notificationHelper = NotificationHelper();
   final BackgroundService _service = BackgroundService();
   _service.initializeIsolate();
-  if (Platform.isAndroid) {
-    await AndroidAlarmManager.initialize();
-  }
+  await AndroidAlarmManager.initialize();
   await _notificationHelper.initNotifications(locator<FlutterLocalNotificationsPlugin>());
   runApp(const MyApp());
 }

@@ -14,7 +14,7 @@ class BackgroundService {
   static BackgroundService? _instance;
   static const String _isolateName = "isolate";
   static SendPort? _uiSendPort;
-  static const idBackgroundJob = 999;
+  static const idBackgroundJob = 1;
 
   BackgroundService._internal() {
     _instance = this;

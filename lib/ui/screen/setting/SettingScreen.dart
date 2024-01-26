@@ -69,7 +69,7 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           Switch(
             value: _viewModel.isActive,
-            onChanged: (isActive) {
+            onChanged: (isActive) async {
               _viewModel.setRemainder(isActive);
               _viewModel.getReminder();
             },
