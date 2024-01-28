@@ -1,5 +1,5 @@
 import 'package:dish_dash/data/local/preferences/AppPreferences.dart';
-import 'package:dish_dash/di/Locator.dart';
+import 'package:dish_dash/di/AppModule.dart';
 import 'package:dish_dash/ui/component/Toolbar.dart';
 import 'package:dish_dash/ui/screen/setting/SettingViewModel.dart';
 import 'package:flutter/material.dart';

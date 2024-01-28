@@ -1,5 +1,5 @@
 import 'package:dish_dash/data/repository/FavoriteRepository.dart';
-import 'package:dish_dash/di/Locator.dart';
+import 'package:dish_dash/di/AppModule.dart';
 import 'package:dish_dash/generated/assets.dart';
 import 'package:dish_dash/model/Restaurant.dart';
 import 'package:dish_dash/model/ResultState.dart';

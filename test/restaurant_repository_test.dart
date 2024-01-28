@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:dish_dash/data/remote/api/ApiRestaurant.dart';
 import 'package:dish_dash/data/remote/api/ApiService.dart';
 import 'package:dish_dash/data/repository/RestaurantRepository.dart';
-import 'package:dish_dash/di/Locator.dart';
+import 'package:dish_dash/di/AppModule.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

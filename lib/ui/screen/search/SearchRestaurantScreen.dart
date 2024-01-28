@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/repository/RestaurantRepository.dart';
-import '../../../di/Locator.dart';
+import '../../../di/AppModule.dart';
 import '../../../model/Restaurant.dart';
 import '../../../model/ResultState.dart';
 import '../../component/SearchBox.dart';

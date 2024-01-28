@@ -11,7 +11,7 @@ import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/repository/RestaurantRepository.dart';
-import '../../../di/Locator.dart';
+import '../../../di/AppModule.dart';
 import '../../../generated/assets.dart';
 import '../../component/NegativeState.dart';
 

@@ -3,7 +3,8 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:dish_dash/data/repository/RestaurantRepository.dart';
-import 'package:dish_dash/di/Locator.dart';
+import 'package:dish_dash/di/AppModule.dart';
+import 'package:dish_dash/di/NetworkModule.dart';
 import 'package:dish_dash/model/Restaurant.dart';
 import 'package:dish_dash/util/NotificationHelper.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -33,6 +34,7 @@ class BackgroundService {
   static Future<void> callback() async {
     try {
       print("Schedule Reminder!");
+      await initDependencies();
       final NotificationHelper notificationHelper = NotificationHelper();
       final restaurantRepository = locator<RestaurantRepositoryImpl>();
       final data = await restaurantRepository.getRestaurants();
