@@ -33,6 +33,12 @@ class ItemRestaurant extends StatelessWidget {
                     height: 64,
                     width: 64,
                     fit: BoxFit.fill,
+                    errorBuilder: (_, __, ___)  {
+                      return const Icon(
+                        Icons.broken_image,
+                        size: 64,
+                      );
+                    },
                   ),
                 ),
               ),
