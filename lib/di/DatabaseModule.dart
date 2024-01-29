@@ -8,11 +8,25 @@ import 'AppModule.dart';
 
 Future<void> initDatabaseDependencies() async {
   final db = await $FloorDishDashDatabase.databaseBuilder(DishDashDatabase.dbName).build();
-  locator.registerSingleton(db);
-  locator.registerSingleton(db.favoriteDao);
-  locator.registerSingleton(FavoriteRepositoryImpl(locator<FavoriteDao>()));
+  if (!locator.isRegistered<DishDashDatabase>()) {
+    locator.registerSingleton(db);
+  }
+
+  if (!locator.isRegistered<FavoriteDao>()) {
+    locator.registerSingleton(db.favoriteDao);
+  }
+
+  if (!locator.isRegistered<FavoriteRepositoryImpl>()) {
+    locator.registerSingleton(FavoriteRepositoryImpl(locator<FavoriteDao>()));
+  }
 
   final prefs = await SharedPreferences.getInstance();
-  locator.registerSingleton(prefs);
-  locator.registerSingleton(AppPreferencesImpl(locator<SharedPreferences>()));
+  if (!locator.isRegistered<SharedPreferences>()) {
+    locator.registerSingleton(prefs);
+  }
+
+  if (!locator.isRegistered<AppPreferencesImpl>()) {
+    locator.registerSingleton(AppPreferencesImpl(locator<SharedPreferences>()));
+  }
+
 }

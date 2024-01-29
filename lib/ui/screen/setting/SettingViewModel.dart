@@ -21,7 +21,7 @@ class SettingViewModel extends ChangeNotifier {
     if (isActive) {
       print("Scheduling Recommendation Restaurant");
       await AndroidAlarmManager.periodic(
-        const Duration(hours: 24),
+        const Duration(days: 1),
         BackgroundService.idBackgroundJob,
         BackgroundService.callback,
         startAt: DateTimeHelper.format(),

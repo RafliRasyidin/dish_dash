@@ -14,7 +14,15 @@ Future<void> initNetworkDependencies() async {
         sendTimeout: const Duration(seconds: 30),
       )
   );
-  locator.registerSingleton(dio);
-  locator.registerSingleton(ApiRestaurant(locator<Dio>()));
-  locator.registerSingleton(RestaurantRepositoryImpl(locator<ApiRestaurant>()));
+  if (!locator.isRegistered<Dio>()) {
+    locator.registerSingleton(dio);
+  }
+
+  if (!locator.isRegistered<ApiRestaurant>()) {
+    locator.registerSingleton(ApiRestaurant(locator<Dio>()));
+  }
+
+  if (!locator.isRegistered<RestaurantRepositoryImpl>()) {
+    locator.registerSingleton(RestaurantRepositoryImpl(locator<ApiRestaurant>()));
+  }
 }

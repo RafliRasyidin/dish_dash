@@ -4,10 +4,8 @@ import 'dart:ui';
 
 import 'package:dish_dash/data/repository/RestaurantRepository.dart';
 import 'package:dish_dash/di/AppModule.dart';
-import 'package:dish_dash/di/NetworkModule.dart';
 import 'package:dish_dash/model/Restaurant.dart';
 import 'package:dish_dash/util/NotificationHelper.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final ReceivePort port = ReceivePort();
 
@@ -41,7 +39,7 @@ class BackgroundService {
       final randomIndex = Random().nextInt(data.length);
       final randomRestaurant = data[randomIndex].toDetailRestaurant();
       await notificationHelper.showNotification(
-        locator<FlutterLocalNotificationsPlugin>(),
+        flutterLocalNotificationsPlugin,
         randomRestaurant
       );
 

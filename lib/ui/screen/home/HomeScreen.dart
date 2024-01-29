@@ -1,8 +1,8 @@
 import 'package:dish_dash/data/remote/api/ApiService.dart';
 import 'package:dish_dash/data/repository/RestaurantRepository.dart';
 import 'package:dish_dash/di/AppModule.dart';
-import 'package:dish_dash/model/Restaurant.dart';
 import 'package:dish_dash/generated/assets.dart';
+import 'package:dish_dash/model/Restaurant.dart';
 import 'package:dish_dash/model/ResultState.dart';
 import 'package:dish_dash/ui/component/SearchBox.dart';
 import 'package:dish_dash/ui/screen/detail/DetailRestaurantScreen.dart';
@@ -12,7 +12,6 @@ import 'package:dish_dash/ui/screen/search/SearchRestaurantScreen.dart';
 import 'package:dish_dash/ui/screen/setting/SettingScreen.dart';
 import 'package:dish_dash/util/NotificationHelper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _viewModel = HomeViewModel(locator<RestaurantRepositoryImpl>());
-    _notificationHelper.requestNotificationPermission(locator<FlutterLocalNotificationsPlugin>());
+    _notificationHelper.requestNotificationPermission(flutterLocalNotificationsPlugin);
     _notificationHelper.configSelectNotificationSubject(DetailRestaurantScreen.routeName);
     super.initState();
   }
