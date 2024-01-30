@@ -8,7 +8,6 @@ import 'AppModule.dart';
 Future<void> initNetworkDependencies() async {
   final dio = Dio(
       BaseOptions(
-        baseUrl: baseUrl,
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
         sendTimeout: const Duration(seconds: 30),

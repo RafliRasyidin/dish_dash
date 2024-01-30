@@ -41,6 +41,23 @@ class ListRestaurantsResponse {
     restaurants: json["restaurants"] == null ? [] : List<RestaurantItemResponse>.from(json["restaurants"]!.map((x) => RestaurantItemResponse.fromJson(x))),
   );
 
+  Map<String, dynamic> toMap() {
+    return {
+      'error': this.error,
+      'message': this.message,
+      'count': this.count,
+      'restaurants': this.restaurants?.map((e) => e.toMap()),
+    };
+  }
+
+  factory ListRestaurantsResponse.fromMap(Map<String, dynamic> map) {
+    return ListRestaurantsResponse(
+      error: map['error'] as bool,
+      message: map['message'] as String,
+      count: map['count'] as int,
+      restaurants: map['restaurants'] as List<RestaurantItemResponse>,
+    );
+  }
 }
 
 class RestaurantItemResponse {
@@ -85,6 +102,17 @@ class RestaurantItemResponse {
     city: json["city"],
     rating: json["rating"]?.toDouble(),
   );
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': this.id,
+      'name': this.name,
+      'description': this.description,
+      'pictureId': this.pictureId,
+      'city': this.city,
+      'rating': this.rating,
+    };
+  }
 
 }
 
